@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class = "row">
+    <div class="col-md-10 offset-md-3">
+        <div class="col-lg-8">
+            <h3>Makaleler</h3>
+            <hr>
+        </div>
+    </div>
+</div>
+<div class = "row">
+    <div class="col-md-10 offset-md-3">
+        <div class="col-lg-8">
+            <form>
+                {% csrf_token %}
+                <input class="form-control-sm form-control-borderless" type="search" name = "keyword" placeholder="Ara...">
+                <button class="btn btn-lg btn-danger" type="submit">Ara</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% if articles %}
+
+{% for article in articles %}
+<div class="row">
+    <div class="col-md-10 offset-md-3">
+        <!-- Post content-->
+        <div class="col-lg-8">
+        <article>
+            <!-- Post header-->
+            <header class="mb-4">
+                <!-- Post title-->
+                <a href="{% url 'article:detail' article.id %}"><h2 class="fw-bolder mb-1">{{article.title}}</h2></a>
+                <!-- Post meta content-->
+                <div class="text-muted fst-italic mb-2">
+                    <p>
+                    by {{article.author.username}}
+                    </p>
+                    <p>
+                        {{article.created_date}}
+                    </p>
+                </div>
+                <!-- Post categories-->
+                <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
+                <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+            </header>
+            <!-- Preview image figure-->
+            {% if article.article_image %}
+            <a href="{% url 'article:detail' article.id %}"><figure class="mb-4"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt="..." /></figure></a>
+            {% endif %}
+            
+            <!-- Post content-->
+            <section class="mb-5">
+                <p>
+                    {{article.content|safe|truncatewords:30}}
+                </p>
+
+                <a style = "float : right;" href="{% url 'article:detail' article.id %}" class = "btn btn-danger">Devamını Oku</a>
+
+                <hr>
+
+            </section>
+
+        </article> 
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+
+{% else %}
+<div class = "row">
+    <div class="col-md-10 offset-md-3">
+        <div class="col-lg-8">
+            <div class = "alert alert-danger">Makale bulunamadı.</div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock body %}
